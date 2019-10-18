@@ -1,0 +1,3 @@
+([('Test2',
+   '/Users/luis/PycharmProjects/PySimpleGUITest/venv/src/dist/Test2',
+   'EXECUTABLE')],)
