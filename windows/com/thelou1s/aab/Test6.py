@@ -5,6 +5,18 @@ import subprocess
 from shutil import copyfile
 import shutil
 import os
+import sys
+
+
+def find_data_file(filename):
+    if getattr(sys, 'frozen', False):
+        # The application is frozen
+        datadir = os.path.dirname(sys.executable)
+    else:
+        # The application is not frozen
+        # Change this bit to match where you store your data files:
+        datadir = os.path.dirname(__file__)
+    return os.path.join(datadir, filename)
 
 
 def Launcher():
@@ -35,27 +47,32 @@ def Launcher():
         if button in ('Quit', None):
             break  # exit button clicked
 
-        source_file = values['_sourcefile_']
-        icon_file = values['_iconfile_']
+        aab_file = values['_sourcefile_']
+        jar_file = values['_iconfile_']
         keystore_file = values['_keystore_file_']
 
-        icon_option = '-i "{}"'.format(icon_file) if icon_file else ''
-        source_path, source_filename = os.path.split(source_file)
+        icon_option = '-i "{}"'.format(jar_file) if jar_file else ''
+        source_path, source_filename = os.path.split(aab_file)
         workpath_option = '--workpath "{}"'.format(source_path)
         dispath_option = '--distpath "{}"'.format(source_path)
         specpath_option = '--specpath "{}"'.format(source_path)
         folder_to_remove = os.path.join(source_path, source_filename[:-3])
         file_to_remove = os.path.join(source_path, source_filename[:-3] + '.spec')
-        # command_line = 'pyinstaller -wF "{}" {} {} {} {}'.format(source_file, icon_option, workpath_option,
-        #                                                          dispath_option, specpath_option)
+
+
+        jar_file = find_data_file('lib/res/bundletool-all-0.10.2.jar')
+        keystore_file = find_data_file('lib/res/imoblife.android.keystore')
+
         command_output_apks = 'java -jar {} build-apks --bundle={} --output=app.apks --ks={} --ks-pass=pass:88326590 --ks-key-alias=imoblife_android_keystore --key-pass=pass:88326590'.format(
-            icon_file, source_file, keystore_file)
-        command_install_apks = 'java -jar {} install-apks --apks=app.apks'.format(icon_file)
+            jar_file, aab_file, keystore_file)
+        command_install_apks = 'java -jar {} install-apks --apks=app.apks'.format(jar_file)
 
         if button == 'Make Package':
-            prt(source_file)
-            prt(icon_file)
+            prt('aab_file = ' + aab_file)
+            prt('jar_file = ' + jar_file)
+            prt('keystore_file = ' + keystore_file)
 
+            runCommandWrapper("pwd", window)
             runCommandWrapper("adb", window)
             runCommandWrapper(command_output_apks, window, file_to_remove, folder_to_remove)
             runCommandWrapper(command_install_apks, window, './app.apks', folder_to_remove)
