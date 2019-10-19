@@ -10,7 +10,7 @@ import os
 def Launcher():
     sg.ChangeLookAndFeel('LightGreen')
 
-    layout = [[sg.T('PyInstaller EXE Creator', font='Any 15')],
+    layout = [[sg.T('Package Creator', font='Any 15')],
               [sg.T('Aab Files'), sg.In(key='_sourcefile_', size=(45, 1)),
                sg.FileBrowse(file_types=(("Aab Files", "*.aab"),))],
               [sg.T('Jar File'), sg.In(key='_iconfile_', size=(45, 1)),
@@ -18,10 +18,10 @@ def Launcher():
               [sg.T('Keystore File'), sg.In(key='_keystore_file_', size=(45, 1)),
                sg.FileBrowse(file_types=(("Keystore File", "*.*"),))],
               [sg.Frame('Output', font='Any 15', layout=[[sg.Output(size=(65, 15), font='Courier 10')]])],
-              [sg.ReadFormButton('Make EXE', bind_return_key=True),
+              [sg.ReadFormButton('Make Package', bind_return_key=True),
                sg.SimpleButton('Quit', button_color=('white', 'firebrick3')), ]]
 
-    window = sg.Window('PySimpleGUI EXE Maker',
+    window = sg.Window('PySimpleGUI Package Maker',
                        auto_size_text=False,
                        auto_size_buttons=False,
                        default_element_size=(20, 1,),
@@ -52,14 +52,18 @@ def Launcher():
             icon_file, source_file, keystore_file)
         command_install_apks = 'java -jar {} install-apks --apks=app.apks'.format(icon_file)
 
-        if button == 'Make EXE':
+        if button == 'Make Package':
             prt(source_file)
             prt(icon_file)
-            runCommandWrapper(command_output_apks, file_to_remove, folder_to_remove, source_file, window)
-            runCommandWrapper(command_install_apks, './app.apks', folder_to_remove, source_file, window)
+
+            runCommandWrapper("adb", window)
+            runCommandWrapper(command_output_apks, window, file_to_remove, folder_to_remove)
+            runCommandWrapper(command_install_apks, window, './app.apks', folder_to_remove)
 
 
-def runCommandWrapper(command, file_to_remove, folder_to_remove, source_file, window):
+
+
+def runCommandWrapper(command, window, file_to_remove=None, folder_to_remove=None):
     try:
         prt(command)
         # prt('Making EXE... this will take a while.. the program has NOT locked up...')
@@ -67,10 +71,15 @@ def runCommandWrapper(command, file_to_remove, folder_to_remove, source_file, wi
         # prt('Running command {}'.format(command_line))
         runCommand(command)
 
+        if file_to_remove is not None or folder_to_remove is not None:
+            removeFile(file_to_remove, folder_to_remove)
+
     except Exception as e:
         prt('runCommandWrapper, Exception = ' + str(e))
         # sg.PopupError('runCommandWrapper, Exception = ' + str(e))
 
+
+def removeFile(file_to_remove, folder_to_remove):
     try:
         prt('runCommandWrapper, remove ' + file_to_remove)
         # shutil.rmtree(folder_to_remove)
