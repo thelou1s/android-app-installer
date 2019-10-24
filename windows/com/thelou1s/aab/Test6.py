@@ -29,9 +29,9 @@ def Launcher():
     sg.ChangeLookAndFeel('LightGreen')
 
     layout = [
-              [sg.T('Install Aab', font='Any 15')],
+              [sg.T('Select .aab file to install', font='Any 15', size=(18, 1))],
 
-              [sg.T('Aab Files'), sg.In(key='_sourcefile_', size=(45, 1)),
+              [sg.T('Aab Files', size=(8, 1)), sg.In(key='_sourcefile_', size=(47, 1)),
 
                sg.FileBrowse(file_types=(("Aab Files", "*.aab"),))],
 
@@ -66,6 +66,7 @@ def Launcher():
         aab_file = values['_sourcefile_']
         jar_file = find_data_file('lib/res/bundletool-all-0.10.2.jar')
         keystore_file = find_data_file('lib/res/imoblife.android.keystore')
+        adb_file = find_data_file('lib/res/adb')
         # jar_file = values['_iconfile_']
         # keystore_file = values['_keystore_file_']
 
@@ -80,7 +81,7 @@ def Launcher():
 
         command_output_apks = 'java -jar {} build-apks --bundle={} --output=app.apks --ks={} --ks-pass=pass:88326590 --ks-key-alias=imoblife_android_keystore --key-pass=pass:88326590'.format(
             jar_file, aab_file, keystore_file)
-        command_install_apks = 'java -jar {} install-apks --apks=app.apks'.format(jar_file)
+        command_install_apks = 'java -jar {} install-apks --adb={} --apks=app.apks'.format(jar_file, adb_file)
 
         if button == btn_install:
             prt('aab_file = ' + aab_file)
@@ -88,7 +89,7 @@ def Launcher():
             prt('keystore_file = ' + keystore_file)
 
             runCommandWrapper("pwd", window)
-            runCommandWrapper("adb", window)
+            runCommandWrapper(adb_file, window)
             runCommandWrapper(command_output_apks, window, file_to_remove, folder_to_remove)
             runCommandWrapper(command_install_apks, window, './app.apks', folder_to_remove)
 
