@@ -7,6 +7,9 @@ import shutil
 import os
 import sys
 
+# ------ Menu Definition ------ #
+menu_def = [['Help', 'About'], ]
+
 
 # https://cx-freeze.readthedocs.io/en/latest/faq.html#data-files
 def find_data_file(filename):
@@ -30,7 +33,9 @@ def Launcher():
     sg.ChangeLookAndFeel('LightGreen')
 
     layout = [
-        [sg.T('Select .aab file to install', font='Any 15', size=(20, 1))],
+        [sg.Menu(menu_def, tearoff=True)],
+
+        [sg.T('Select .aab file to install', font='Any 15', size=(28, 1))],
 
         [sg.T('Aab Files', size=(8, 1)), sg.In(key='_sourcefile_', size=(47, 1)),
 
@@ -48,8 +53,7 @@ def Launcher():
 
         [sg.ReadFormButton(btn_install, bind_return_key=True),
 
-         sg.SimpleButton(btn_quit, button_color=('white', 'firebrick3')),
-         sg.T('thelou1s@yahoo.com', font='Any 15', size=(18, 1))]
+         sg.SimpleButton(btn_quit, button_color=('white', 'firebrick3')), ]
     ]
 
     window = sg.Window(app_title,
@@ -94,6 +98,10 @@ def Launcher():
             runCommandWrapper(adb_file, window)
             runCommandWrapper(command_output_apks, window, file_to_remove, folder_to_remove)
             runCommandWrapper(command_install_apks, window, './app.apks', folder_to_remove)
+
+
+        if button == 'About':
+            sg.popup('support: thelou1s@yahoo.com')
 
 
 def runCommandWrapper(command, window, file_to_remove=None, folder_to_remove=None):

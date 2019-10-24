@@ -3,8 +3,11 @@
 # https://cx-freeze.readthedocs.io/en/latest/distutils.html#distutils-setup-script
 
 from cx_Freeze import setup, Executable
+from sys import platform
 
 base = None
+if platform == "win32":
+    base = "Win32GUI"
 # base = 'Console'
 # base = 'ConsoleKeepPath'
 # base = 'Win32GUI'
@@ -21,6 +24,8 @@ packages = ['do', 'khh']
 
 build_exe_options = {"includes": ["res"]}
 # https://stackoverflow.com/questions/2553886/how-can-i-bundle-other-files-when-using-cx-freeze
+
+
 
 setup(name='App',
       version='1.0',
