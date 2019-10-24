@@ -7,6 +7,7 @@ import shutil
 import os
 import sys
 
+
 # https://cx-freeze.readthedocs.io/en/latest/faq.html#data-files
 def find_data_file(filename):
     if getattr(sys, 'frozen', False):
@@ -22,32 +23,34 @@ def find_data_file(filename):
 def Launcher():
     app_name = 'Aab File Installer'
     app_version = ' v1.0'
-    app_title = app_name + app_version;
+    app_title = app_name + app_version
     btn_install = 'Install'
     btn_quit = 'Quit'
 
     sg.ChangeLookAndFeel('LightGreen')
 
     layout = [
-              [sg.T('Select .aab file to install', font='Any 15', size=(18, 1))],
+        [sg.T('Select .aab file to install', font='Any 15', size=(20, 1))],
 
-              [sg.T('Aab Files', size=(8, 1)), sg.In(key='_sourcefile_', size=(47, 1)),
+        [sg.T('Aab Files', size=(8, 1)), sg.In(key='_sourcefile_', size=(47, 1)),
 
-               sg.FileBrowse(file_types=(("Aab Files", "*.aab"),))],
+         sg.FileBrowse(file_types=(("Aab Files", "*.aab"),))],
 
-              # [sg.T('Jar File'), sg.In(key='_iconfile_', size=(45, 1)),
-              #
-              #  sg.FileBrowse(file_types=(("Jar File", "*.jar"),))],
-              #
-              # [sg.T('Keystore File'), sg.In(key='_keystore_file_', size=(45, 1)),
-              #
-              #  sg.FileBrowse(file_types=(("Keystore File", "*.*"),))],
+        # [sg.T('Jar File'), sg.In(key='_iconfile_', size=(45, 1)),
+        #
+        #  sg.FileBrowse(file_types=(("Jar File", "*.jar"),))],
+        #
+        # [sg.T('Keystore File'), sg.In(key='_keystore_file_', size=(45, 1)),
+        #
+        #  sg.FileBrowse(file_types=(("Keystore File", "*.*"),))],
 
-              [sg.Frame('Output', font='Any 15', layout=[[sg.Output(size=(65, 15), font='Courier 10')]])],
+        [sg.Frame('Output', font='Any 15', layout=[[sg.Output(size=(65, 15), font='Courier 10')]])],
 
-              [sg.ReadFormButton(btn_install, bind_return_key=True),
+        [sg.ReadFormButton(btn_install, bind_return_key=True),
 
-               sg.SimpleButton(btn_quit, button_color=('white', 'firebrick3')), ]]
+         sg.SimpleButton(btn_quit, button_color=('white', 'firebrick3')),
+         sg.T('thelou1s@yahoo.com', font='Any 15', size=(18, 1))]
+    ]
 
     window = sg.Window(app_title,
                        auto_size_text=False,
@@ -64,9 +67,9 @@ def Launcher():
             break  # exit button clicked
 
         aab_file = values['_sourcefile_']
-        jar_file = find_data_file('lib/res/bundletool-all-0.10.2.jar')
-        keystore_file = find_data_file('lib/res/imoblife.android.keystore')
-        adb_file = find_data_file('lib/res/adb')
+        jar_file = find_data_file('bundletool-all-0.10.2.jar')
+        keystore_file = find_data_file('imoblife.android.keystore')
+        adb_file = find_data_file('adb.exe')
         # jar_file = values['_iconfile_']
         # keystore_file = values['_keystore_file_']
 
@@ -77,7 +80,6 @@ def Launcher():
         specpath_option = '--specpath "{}"'.format(source_path)
         folder_to_remove = os.path.join(source_path, source_filename[:-3])
         file_to_remove = os.path.join(source_path, source_filename[:-3] + '.spec')
-
 
         command_output_apks = 'java -jar {} build-apks --bundle={} --output=app.apks --ks={} --ks-pass=pass:88326590 --ks-key-alias=imoblife_android_keystore --key-pass=pass:88326590'.format(
             jar_file, aab_file, keystore_file)
@@ -92,8 +94,6 @@ def Launcher():
             runCommandWrapper(adb_file, window)
             runCommandWrapper(command_output_apks, window, file_to_remove, folder_to_remove)
             runCommandWrapper(command_install_apks, window, './app.apks', folder_to_remove)
-
-
 
 
 def runCommandWrapper(command, window, file_to_remove=None, folder_to_remove=None):
@@ -134,8 +134,8 @@ def runCommand(cmd, timeout=None):
     out, err = p.communicate()
     p.wait(timeout)
 
-    prt(out)
-    prt(err)
+    prt('out = ' + str(out))
+    prt('err = ' + str(err))
 
     return (out, err)
 
