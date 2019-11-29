@@ -85,9 +85,9 @@ def Launcher():
         folder_to_remove = os.path.join(source_path, source_filename[:-3])
         file_to_remove = os.path.join(source_path, source_filename[:-3] + '.spec')
 
-        command_output_apks = 'java --illegal-access=deny -jar {} build-apks --bundle={} --output=app.apks --ks={} --ks-pass=pass:88326590 --ks-key-alias=imoblife_android_keystore --key-pass=pass:88326590 --mode=universal'.format(
+        command_output_apks = 'java --illegal-access=deny -jar {} build-apks --bundle={} --output=~/app.apks --ks={} --ks-pass=pass:88326590 --ks-key-alias=imoblife_android_keystore --key-pass=pass:88326590 --mode=universal'.format(
             jar_file, aab_file, keystore_file)
-        command_install_apks = 'java --illegal-access=deny -jar {} install-apks --adb={} --apks=app.apks'.format(jar_file, adb_file)
+        command_install_apks = 'java --illegal-access=deny -jar {} install-apks --adb={} --apks=~/app.apks'.format(jar_file, adb_file)
 
         if button == btn_install:
             prt('aab_file = ' + aab_file)
