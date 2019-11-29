@@ -73,7 +73,7 @@ def Launcher():
         aab_file = values['_sourcefile_']
         jar_file = find_data_file('bundletool-all-0.10.2.jar')
         keystore_file = find_data_file('imoblife.android.keystore')
-        adb_file = find_data_file('adb.exe')
+        adb_file = find_data_file('adb')
         # jar_file = values['_iconfile_']
         # keystore_file = values['_keystore_file_']
 
@@ -85,9 +85,9 @@ def Launcher():
         folder_to_remove = os.path.join(source_path, source_filename[:-3])
         file_to_remove = os.path.join(source_path, source_filename[:-3] + '.spec')
 
-        command_output_apks = 'java -jar {} build-apks --bundle={} --output=app.apks --ks={} --ks-pass=pass:88326590 --ks-key-alias=imoblife_android_keystore --key-pass=pass:88326590'.format(
+        command_output_apks = 'java --illegal-access=deny -jar {} build-apks --bundle={} --output=app.apks --ks={} --ks-pass=pass:88326590 --ks-key-alias=imoblife_android_keystore --key-pass=pass:88326590 --mode=universal'.format(
             jar_file, aab_file, keystore_file)
-        command_install_apks = 'java -jar {} install-apks --adb={} --apks=app.apks'.format(jar_file, adb_file)
+        command_install_apks = 'java --illegal-access=deny -jar {} install-apks --adb={} --apks=app.apks'.format(jar_file, adb_file)
 
         if button == btn_install:
             prt('aab_file = ' + aab_file)

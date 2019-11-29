@@ -17,7 +17,7 @@ executables = [
     Executable('Test6.py', base=base)
 ]
 
-includefiles = ['res/adb.exe', 'res/bundletool-all-0.10.2.jar', 'res/imoblife.android.keystore']
+includefiles = ['res/adb', 'res/bundletool-all-0.10.2.jar', 'res/imoblife.android.keystore']
 includes = []
 excludes = ['Tkinter']
 packages = ['do', 'khh']
